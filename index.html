@@ -3,7 +3,7 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>strsemver</title>
+  <title>Strict Semantic Versioning</title>
   <style>
     :root {
       color-scheme: light dark;
@@ -25,6 +25,11 @@
       font-size: 2.25rem;
       margin-bottom: 0.25rem;
     }
+    h2 {
+      font-size: 1.4rem;
+      margin-top: 2.5rem;
+      margin-bottom: 0.5rem;
+    }
     .tagline {
       color: #555;
       margin-top: 0;
@@ -32,6 +37,29 @@
     }
     a {
       color: #2a5db0;
+    }
+    code {
+      font-family: ui-monospace, SFMono-Regular, Menlo, Consolas,
+        "Liberation Mono", monospace;
+      font-size: 0.95em;
+      background: #f2f2f2;
+      padding: 0.1em 0.3em;
+      border-radius: 3px;
+    }
+    pre {
+      font-family: ui-monospace, SFMono-Regular, Menlo, Consolas,
+        "Liberation Mono", monospace;
+      font-size: 0.95rem;
+      line-height: 1.5;
+      background: #f2f2f2;
+      padding: 0.9rem 1rem;
+      border-radius: 5px;
+      overflow-x: auto;
+    }
+    pre code {
+      background: none;
+      padding: 0;
+      border-radius: 0;
     }
     footer {
       margin-top: 3rem;
@@ -44,24 +72,148 @@
       body { color: #e6e6e6; background: #16181c; }
       .tagline { color: #a8a8a8; }
       a { color: #7aa7ff; }
+      code, pre { background: #23262c; }
       footer { border-top-color: #333; color: #999; }
     }
   </style>
 </head>
 <body>
-  <h1>strsemver</h1>
-  <p class="tagline">A variant of Semantic Versioning.</p>
+  <h1>Strict Semantic Versioning</h1>
+  <p class="tagline">An improved variant of Semantic Versioning.</p>
 
   <p>
-    This is the future home of the <strong>strsemver</strong> specification, a
-    variant of Semantic Versioning. The specification text is not published yet;
-    this page is a placeholder while the variant is being defined.
+    Strict Semantic Versioning is a new and improved version of
+    <a href="https://semver.org/">Semantic Versioning</a>. This project is hosted
+    at the <code>strsemver.org</code> domain.
   </p>
 
   <p>
-    Until then, if you are looking for the original Semantic Versioning
-    specification, you can read it at
-    <a href="https://semver.org">semver.org</a>.
+    Semantic Versioning is incomplete. It lacks definitions for two critical
+    concepts:
+  </p>
+
+  <ol>
+    <li>Public API</li>
+    <li>Breaking change</li>
+  </ol>
+
+  <p>
+    Strict Semantic Versioning includes definitions for those two concepts (and
+    more).
+  </p>
+
+  <h2>Definitions of the two missing concepts</h2>
+
+  <p>
+    <strong>Public API.</strong> A public API is a set of symbols from a software
+    library.
+  </p>
+
+  <p>
+    <strong>Breaking change.</strong> A breaking change is the removal of a symbol
+    from the public API.
+  </p>
+
+  <h2>Worked example</h2>
+
+  <p>Consider this library:</p>
+
+  <pre><code>class A:
+    method x(p, q)</code></pre>
+
+  <p>Then the public API consists of two symbols:</p>
+
+  <ol>
+    <li><code>class A</code></li>
+    <li><code>class A / method x(p, q)</code></li>
+  </ol>
+
+  <p>A non-breaking change is the addition of a symbol to the public API:</p>
+
+  <pre><code>1. class A
+2. class A / method x(p, q)
+3. function g(i, j)</code></pre>
+
+  <p>
+    A breaking change is the removal of a symbol from the public API. After
+    removing <code>class A</code> and its method, the public API is:
+  </p>
+
+  <pre><code>1. function g(i, j)</code></pre>
+
+  <h2>Precise meaning of the version numbers</h2>
+
+  <p>
+    With these definitions, the MAJOR, MINOR, and PATCH numbers now have a precise,
+    deterministic meaning:
+  </p>
+
+  <ul>
+    <li><strong>MAJOR:</strong> increased when there is a breaking change.</li>
+    <li><strong>MINOR:</strong> increased when there is a non-breaking change.</li>
+    <li><strong>PATCH:</strong> increased when there is any other change.</li>
+  </ul>
+
+  <p>
+    This means a library that uses Strict Semantic Versioning MUST declare its
+    public API.
+  </p>
+
+  <h2>The subjectivity of breaking changes</h2>
+
+  <p>
+    Unfortunately, the term "breaking change" is used nowadays to refer to any
+    change that can produce undesired behavior for the end user of the library.
+    There is something important that needs to be stated: any change to a library
+    can cause undesired behavior for the end user of the library. End users must be
+    aware of this.
+  </p>
+
+  <p>
+    Version numbers are not only an identifier of a particular state of a software
+    library. Version numbers are also a message to the end user. A version number
+    can carry this message to the end user: be careful and test this version before
+    you put it into production.
+  </p>
+
+  <p>
+    That is fine, but it should not be bundled up with the increase of the MAJOR
+    number. This is why Strict Semantic Versioning separates the strictly defined
+    idea of a breaking change from the subjective idea of undesired behavior for the
+    end user.
+  </p>
+
+  <h2>The trailing exclamation mark</h2>
+
+  <p>A strict semantic version number consists of these fields:</p>
+
+  <pre><code>MAJOR.MINOR.PATCH!</code></pre>
+
+  <p>
+    Notice the <code>!</code> at the end. That <code>!</code> means: this version can
+    cause undesired behavior for the end user; the end user must read the changelog
+    and test this version before putting it into production.
+  </p>
+
+  <p>
+    Every strict semantic version number ends with <code>!</code>, because every
+    change to a library can cause undesired behavior for the end user.
+  </p>
+
+  <h2>The changelog</h2>
+
+  <p>
+    Another critical artifact is the changelog. The changelog is the artifact
+    library developers use to communicate with the end users.
+  </p>
+
+  <p>
+    If the library developers consider that a particular change in a new version is
+    likely to cause undesired behavior for the end user, then they SHOULD add a
+    message in the changelog, prefixed with the word <code>WARNING</code>, where
+    that change is explained. The library developers MUST NOT describe that change
+    as a breaking change unless it is actually a breaking change per the definitions
+    above.
   </p>
 
   <footer>
